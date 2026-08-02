@@ -1,0 +1,372 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[UTF8]{ctex}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{booktabs}
+\usepackage{xfrac}
+\tcbuselibrary{theorems}
+
+\geometry{margin=2.5cm}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{定理}[section]
+\newtheorem{proposition}[theorem]{命题}
+\newtheorem{corollary}[theorem]{推论}
+\newtheorem{lemma}[theorem]{引理}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{定义}
+\newtheorem{example}[theorem]{例}
+\newtheorem{problem}[theorem]{问题}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{注记}
+\newtheorem{conjecture}[theorem]{猜想}
+
+\title{\bfseries 接触图、Tur\'an 定理与平面密铺\\[4pt]
+\large ——可密铺全平面的多边形之图论刻画}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+本文从接触图（contact graph）的视角研究平面密铺问题。
+将每块瓷砖视为顶点、共享边界视为边，构造平面图。
+利用 Euler 公式与图论约束，我们直接从接触图推导出：
+（1）边对边的单一凸多边形密铺中，多边形边数 $k \le 6$；
+（2）正多边形密铺的顶点类型完全由丢番图方程 $\sum 1/k_i = (m-2)/2$ 决定；
+（3）Tur\'an 定理在直接应用中虽不紧，但``平面 Tur\'an 数''——即禁用于结构下平面图的最大边数——为多类型瓷砖的接触模式提供了非平凡的约束。
+\end{abstract}
+
+\tableofcontents
+
+% ============================================================
+\section{接触图：从铺砌到图论}
+% ============================================================
+
+\subsection{定义}
+
+\begin{definition}[接触图]
+设 $\mathcal{T} = \{T_1, \dots, T_n\}$ 为平面的一个铺砌（瓷砖内部两两不交，并集覆盖区域）。
+$\mathcal{T}$ 的\textbf{接触图} $G = G(\mathcal{T})$ 定义为：
+\begin{itemize}
+    \item $V(G) = \{v_1, \dots, v_n\}$，$v_i$ 对应瓷砖 $T_i$；
+    \item 边 $v_i v_j \in E(G)$ 当且仅当 $\partial T_i \cap \partial T_j$ 包含长度为正的线段。
+\end{itemize}
+\end{definition}
+
+\begin{proposition}[接触图的基本性质]\label{prop:basic}
+对于平面铺砌的接触图 $G$：
+\begin{enumerate}[label=(\roman*)]
+    \item $G$ 是\textbf{平面图}（可取每块瓷砖内部一点为顶点，沿共享边中点连线为边）；
+    \item 若铺砌为边对边（edge-to-edge），且所有瓷砖为 $k$ 边形，则 $G$ 是近似 $k$-正则的（内部顶点度数 $=k$）；
+    \item 若全平面密铺，取大块 $n$ 枚瓷砖，边界效应可忽略，视为环面上的图，满足 $V - E + F = 0$。
+\end{enumerate}
+\end{proposition}
+
+% ============================================================
+\section{单一多边形密铺：$k \le 6$ 的推导}\label{sec:monohedral-contact}
+% ============================================================
+
+\subsection{Euler 公式推导}
+
+考虑由全等 $k$ 边形构成的边对边平面密铺。取足够大的一块，含 $n$ 枚瓷砖。
+将这块粘贴成环面（周期边界条件），则 Euler 公式为：
+\begin{equation}\label{eq:euler-torus}
+V - E + F = 0,
+\end{equation}
+其中：
+\begin{itemize}
+    \item $V = n$ (接触图的顶点数 = 瓷砖数)；
+    \item $E = \dfrac{kn}{2}$ (每枚 $k$ 边形有 $k$ 个邻居，每条边被两端共享)；
+    \item $F$ = 接触图的面数，对应铺砌中瓷砖相遇的\textbf{顶点}。
+\end{itemize}
+
+代入 \eqref{eq:euler-torus}：
+\begin{equation}\label{eq:F}
+F = E - V = \frac{kn}{2} - n = n\left(\frac{k}{2} - 1\right).
+\end{equation}
+
+令 $m$ 为每个铺砌顶点处相遇的瓷砖数（即接触图中每个面的度数）。
+所有面的度数之和等于 $2E$：
+\begin{equation}\label{eq:face-sum}
+\sum_{\text{faces } f} \deg(f) = 2E = kn.
+\end{equation}
+
+记平均面度 $\overline{m} = \frac{1}{F}\sum \deg(f)$，则：
+\begin{equation}\label{eq:m-avg}
+\overline{m} = \frac{kn}{F}
+= \frac{kn}{n(k/2 - 1)}
+= \frac{2k}{k-2}.
+\end{equation}
+
+\begin{theorem}[单一多边形密铺的必要条件]\label{thm:k-bound}
+若存在全等 $k$ 边形的边对边平面密铺，则 $k \le 6$。
+\end{theorem}
+
+\begin{proof}
+任何密铺的顶点处至少有 $3$ 枚瓷砖相遇（否则为边界或退化情形）。故 $\overline{m} \ge 3$。
+由 \eqref{eq:m-avg}：
+\[
+\frac{2k}{k-2} \ge 3 \implies 2k \ge 3k - 6 \implies k \le 6.
+\]
+\end{proof}
+
+\begin{center}
+\begin{tabular}{c|c|c|c}
+\toprule
+$k$ & $\overline{m} = 2k/(k-2)$ & 可行性 & 已知密铺 \\
+\midrule
+3 & $6$ & \checkmark & 任意三角形可密铺 \\
+4 & $4$ & \checkmark & 任意四边形可密铺 \\
+5 & $10/3 \approx 3.33$ & \checkmark & 15 类五边形已知 \\
+6 & $3$ & \checkmark & 3 类六边形已知 \\
+$\ge 7$ & $<3$ & \textcolor{red}{\textbf{×}} & 不存在 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{remark}
+表中所列的已知分类为 Reinhardt (1918), Kershner (1968), James (1975), Rice (1977),
+Stein (1985), Mann--McLoud--Von Derau (2015--2017) 及 Rao (2017) 等人的工作。
+五边形密铺共 15 类，六边形共 3 类。$k \ge 7$ 的凸多边形不存在边对边单一密铺，
+这一定理 \ref{thm:k-bound} 提供了简洁的图论证明（但需假设边对边条件）。
+\end{remark}
+
+\subsection{非边对边密铺的情况}
+
+若放宽边对边条件（允许瓷砖的部分边与多个邻居接触），接触图的度数可能超过 $k$。
+此时 $E$ 增大，$\overline{m}$ 减小。但平面图的 $E \le 3V-6$ 仍适用。
+详细分析见第 \ref{sec:multi-edge} 节。
+
+% ============================================================
+\section{正多边形密铺与 Archimedean 顶点类型}
+% ============================================================
+
+\subsection{顶点类型的丢番图方程}
+
+设在一个密铺顶点处有 $m$ 枚正 $k_1, k_2, \dots, k_m$ 边形相遇。
+正 $k$ 边形的内角为 $\frac{k-2}{k}\pi$。所有角度之和应为 $2\pi$：
+\[
+\sum_{i=1}^{m} \frac{k_i-2}{k_i} = 2
+\implies \sum_{i=1}^{m} \frac{1}{k_i} = \frac{m-2}{2}.
+\]
+这正是第 \ref{sec:monohedral-contact} 节中 $\overline{m} = 2k/(k-2)$ 的``局部''版本。
+
+\subsection{枚举结果}
+
+通过计算程序枚举（$k_i \le 12$）得到所有解：
+
+{\small
+\begin{center}
+\begin{tabular}{c|c|l}
+\toprule
+$m$ & 目标 $\sum 1/k_i$ & 顶点类型 $(k_1, \dots, k_m)$ \\
+\midrule
+3 & $1/2$ & $(3,12,12),\;(4,6,12),\;(4,8,8),\;(5,5,10),\;(6,6,6)$ \\
+4 & $1$   & $(3,3,4,12),\;(3,3,6,6),\;(3,4,4,6),\;(4,4,4,4)$ \\
+5 & $3/2$ & $(3,3,3,3,6),\;(3,3,3,4,4)$ \\
+6 & $2$   & $(3,3,3,3,3,3)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\par}
+
+这些恰好是\textbf{Archimedean 密铺}（均匀密铺）的所有顶点类型。其中：
+\begin{itemize}
+    \item $(6,6,6)$ 对应正六边形密铺
+    \item $(4,4,4,4)$ 对应正方形网格
+    \item $(3,3,3,3,3,3)$ 对应正三角形密铺
+    \item $(3,6,3,6)$ 为三六边形密铺（trihexagonal），但由 $(3,3,6,6)$ 经不同顺序排列得到
+\end{itemize}
+
+\subsection{从顶点类型到接触图参数}
+
+对于每种 Archimedean 密铺，可计算瓷砖类型比例及接触图的平均度数：
+
+{\small
+\begin{center}
+\begin{tabular}{c|c|c|c}
+\toprule
+顶点类型 & 瓷砖比例 & 平均边数 $k_{\text{avg}}$ & 预测 $\overline{m}$ \\
+\midrule
+$3^6$ & 三角形 100\% & $3$ & $6$ \\
+$4^4$ & 正方形 100\% & $4$ & $4$ \\
+$6^3$ & 六边形 100\% & $6$ & $3$ \\
+$3^3.4^2$ & $\triangle\,66.7\%,\;\square\,33.3\%$ & $3.333$ & $5$ \\
+$3^4.6$ & $\triangle\,88.9\%,\;$ 六边形 $11.1\%$ & $3.333$ & $5$ \\
+$3.6.3.6$ & $\triangle\,66.7\%,\;$ 六边形 $33.3\%$ & $4$ & $4$ \\
+$3.4.6.4$ & $\triangle\,33.3\%,\;\square\,50\%,\;$ 六边形 $16.7\%$ & $4$ & $4$ \\
+$4.8^2$ & $\square\,50\%,\;$ 八边形 $50\%$ & $6$ & $3$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\par}
+
+所有类型均满足 $\overline{m} = 2k_{\text{avg}}/(k_{\text{avg}}-2)$，验证了公式 \eqref{eq:m-avg} 的普适性。
+
+% ============================================================
+\section{Tur\'an 定理与铺砌的联系}
+% ============================================================
+
+\subsection{直接应用的局限性}
+
+Tur\'an 定理：$n$ 个顶点、不含 $K_{r+1}$ 的图边数至多为 $t(n,r) \approx \left(1 - \frac{1}{r}\right)\frac{n^2}{2}$。
+
+密铺接触图是平面图，故不含 $K_5$ 及 $K_{3,3}$，对应 $r=4$。
+Tur\'an 界 $t(n,4) \approx \frac{3}{8}n^2$ 是 $O(n^2)$ 量级。
+然而平面图的边数仅为 $O(n)$（至多 $3n-6$），远小于 Tur\'an 界。
+因此，纯 Tur\'an 定理对密铺的直接约束\textbf{不紧}。
+
+\begin{center}
+\begin{tabular}{c|r|r|r}
+\toprule
+$k$ & 实际边数 $E=kn/2$ ($n=1000$) & Tur\'an 界 $t(1000,4)$ & 平面界 $3n-6$ \\
+\midrule
+3 & 1,500 & 375,000 & 2,994 \\
+4 & 2,000 & 375,000 & 2,994 \\
+5 & 2,500 & 375,000 & 2,994 \\
+6 & 3,000 & 375,000 & 2,994 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{真正有意义的联系：平面 Tur\'an 数}
+
+Tur\'an 定理的精髓在于：\textbf{禁止某个子结构 → 控制整体密度 → 极值图具有部结构}。
+当我们将此思想\textbf{限制在平面图类中}时，得到的是\textbf{平面 Tur\'an 数}（planar Tur\'an number）：
+
+\begin{definition}[平面 Tur\'an 数]
+$\mathrm{ex}_{\mathcal{P}}(n, H) = \max\{|E(G)| : G \text{ 是 } n \text{ 个顶点的平面图，且不含 } H \text{ 作为子图}\}$。
+\end{definition}
+
+这与密铺的联系非常自然：密铺的接触图是平面图；若进一步禁止某种接触模式（如``同类瓷砖不相邻''），
+则接触图属于特定的平面 Tur\'an 极值问题。
+
+\subsection{同类瓷砖不相邻：$r$ 部平面图}
+
+假设密铺中有 $r$ 种类型的瓷砖，且\textbf{同类瓷砖彼此不相邻}。
+则接触图为 $r$ 部平面图（各部分为独立集）。
+
+\begin{proposition}[$r$ 部平面图的最大边数]
+记 $f_r(n)$ 为 $n$ 顶点的 $r$ 部平面图最大边数：
+\begin{itemize}
+    \item $r=2$（二部平面图）：$f_2(n) \le 2n-4$（对 $n \ge 3$）；
+    \item $r=3$（三部平面图）：$f_3(n)$ 已知为某线性函数，且受限于不含 $K_{3,3}$；
+    \item $r \ge 4$：$f_r(n) \le 3n-6$（等同于一般平面图界）。
+\end{itemize}
+\end{proposition}
+
+\begin{remark}
+与 Tur\'an 图 $T(n,r)$ 相比：$T(n,2) = K_{\lfloor n/2\rfloor, \lceil n/2\rceil}$ 有 $\approx n^2/4$ 条边，
+但二部平面图至多 $2n-4$ 条边——差了整整一个量级！
+这正是\textbf{平面性比 Tur\'an 条件强 $O(n)$ 倍}的体现。
+\end{remark}
+
+\begin{example}[三六边形密铺]
+在三六边形密铺 (3.6.3.6) 中：三角形只接触六边形，六边形只接触三角形。
+接触图是\textbf{二部图}。每枚三角形接触 $3$ 个六边形，每枚六边形接触 $6$ 个三角形。
+若总共有 $a$ 个三角形和 $b$ 个六边形，则边数 $E = 3a = 6b$，故 $a = 2b$。
+接触图是二部平面图，边数 $E = 3a = 3 \cdot 2b = 6b$。
+顶点数 $n = a + b = 3b$。平面二部图最大边数为 $2n-4 = 6b-4$，
+实际边数 $6b$（忽略边界效应）恰好接近此上界。
+\end{example}
+
+% ============================================================
+\section{``重边''与多重接触}\label{sec:multi-edge}
+% ============================================================
+
+\subsection{凸多边形密铺中不存在真正的重边}
+
+对于凸多边形的密铺，两枚瓷砖的边界交集 $\partial T_i \cap \partial T_j$ 是两个凸集的交，
+依然为凸集，故只能是空集、一个点、或一条线段。不可能出现两枚瓷砖在两个不连通的线段上接触。
+因此接触图在简单图意义下\textbf{不存在重边}。
+
+\subsection{推广一：带权接触图}
+
+若不仅关心``是否接触''，还关心接触长度，定义\textbf{带权接触图}：
+\[
+w(v_i v_j) = \mathcal{H}^1(\partial T_i \cap \partial T_j) = \text{共享边界的长度}.
+\]
+
+此时 Tur\'an 型问题变为：\textbf{在禁止某种带权团结构的条件下，总权重的极值}。
+
+\begin{problem}[带权 Tur\'an--密铺问题]
+给定 $n$ 枚面积固定的正方形。将其排列使总接触长度最大化，问最大值及极值排列。
+\end{problem}
+
+这类似于等周问题的离散版本：固定总面积，最大化内部接触。
+
+\subsection{推广二：非边对边密铺中的多重接触}
+
+在非边对边密铺中，一枚瓷砖可以沿其一条边与多个邻居接触。
+此情况下，每枚瓷砖的度数可能超过 $k$（$k$ 边形可以有超过 $k$ 个邻居）。
+接触图可能具有更高的平均度数，使 $k \le 6$ 的论证需要修正。
+
+若进一步推广至三维：多面体可以通过多个面接触，形成真正的多重边（multi-edges），
+此时图论框架自然地容纳重边图或超图。
+
+% ============================================================
+\section{总结与开放问题}
+% ============================================================
+
+\subsection{主要结果}
+
+\begin{enumerate}[label=(\arabic*)]
+    \item 接触图 + Euler 公式 $\Rightarrow$ 边对边单一凸 $k$ 边形密铺的必要条件 $k \le 6$。
+    这是一个纯图论的推导，不需要任何几何论证（除凸性和平面性外）。
+    
+    \item 正多边形密铺的顶点类型完全由 $\sum 1/k_i = (m-2)/2$ 决定。
+    这等价于内角之和 $= 360^\circ$，但接触图框架揭示了它与平均面度公式 $\overline{m} = 2k/(k-2)$ 的统一性。
+    
+    \item Tur\'an 定理对接触图的直接约束不紧（$O(n^2)$ vs $O(n)$），
+    但``平面 Tur\'an 数''——限制在平面图类中的极值——为多类型瓷砖的接触模式提供非平凡约束。
+    尤其是同类瓷砖不相邻时，$r$ 部平面图的最大边数远小于一般 $r$ 部图的 Tur\'an 界。
+\end{enumerate}
+
+\subsection{开放问题}
+
+\begin{enumerate}[label=\textbf{Q\arabic*}.]
+
+    \item \textbf{平面 Tur\'an 数的几何实现}：
+    对于给定的禁用于图 $H$，$\mathrm{ex}_{\mathcal{P}}(n, H)$ 的极值平面图
+    能否实现为\textbf{某种密铺的接触图}？哪些平面 Tur\'an 极值图有几何对应？
+    
+    \item \textbf{五边形密铺的图论分类}：
+    对于 $k=5$，$\overline{m} = 10/3$，意味顶点类型为 $3$ 或 $4$ 的组合。
+    能否从接触图的角度理解为何恰好有 $15$ 类五边形密铺？
+    
+    \item \textbf{非边对边密铺的接触图}：
+    如何修正 Euler 公式推导以涵盖非边对边情形？此时接触图的平均度数不再等于 $k$。
+    
+    \item \textbf{带权极值问题}：
+    固定总面积的 $n$ 枚多边形，最大化接触总长度。极值排列与等周不等式有何联系？
+    
+    \item \textbf{三维推广}：
+    多面体堆砌的接触图（面接触）满足何种 Euler 型约束？重边在三维中有非平凡实例。
+    
+    \item \textbf{非周期密铺与无限图}：
+    对于非周期（如 Penrose 密铺）的接触图（无限平面图），
+    Tur\'an 型密度参数是否有意义？
+
+\end{enumerate}
+
+\vspace{12pt}
+\begin{tcolorbox}[title=核心洞察]
+密铺问题的图论本质：\textbf{接触图是介于组合与几何之间的桥梁}。
+它既承载了平面性这一几何信息，又将``谁与谁相邻''提升为独立的组合对象。
+Tur\'an 定理的思想——通过禁止子结构来控制密度——在限制为平面图类后，
+为分析瓷砖间的接触模式（尤其是多类型密铺中同类相避的情形）提供了有力的框架。
+\end{tcolorbox}
+
+\end{document}

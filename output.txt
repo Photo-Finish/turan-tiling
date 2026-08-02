@@ -1,0 +1,17 @@
+============================================================
+PART 1: Monohedral edge-to-edge tiling constraints
+============================================================
+
+For k-gon monohedral tiling (interior, edge-to-edge):
+  V = n tiles, E = kn/2, F = n(k/2-1)
+Traceback (most recent call last):
+  File "D:\Workspace\LaTeX\Turan and tiling\explore_tilings.py", line 511, in <module>
+    check_monohedral_feasibility()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\Workspace\LaTeX\Turan and tiling\explore_tilings.py", line 43, in check_monohedral_feasibility
+    print("  avg face degree m\u0304 = 2k/(k-2)")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\17501\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u0304' in position 19: character maps to <undefined>
